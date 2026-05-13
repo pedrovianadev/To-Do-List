@@ -119,21 +119,22 @@
  */
 
 const { Task } = require('../models');
+const { Op } = require('sequelize');
 const { validationResult } = require('express-validator');
 
 exports.listar = async (req, res) => {
   try {
-    const where = { user_id: req.userId };
+    const where = { userId: req.userId };
 
     if (req.query.status) {
       where.status = req.query.status;
     }
 
     if (req.query.busca) {
-      where.titulo = { [require('sequelize').Op.like]: `%${req.query.busca}%` };
+      where.titulo = { [Op.like]: `%${req.query.busca}%` };
     }
 
-    const tasks = await Task.findAll({ where, order: [['created_at', 'DESC']] });
+    const tasks = await Task.findAll({ where, order: [['createdAt', 'DESC']] });
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ erro: 'Erro ao listar tarefas' });
@@ -143,7 +144,7 @@ exports.listar = async (req, res) => {
 exports.buscarPorId = async (req, res) => {
   try {
     const task = await Task.findOne({
-      where: { id: req.params.id, user_id: req.userId },
+      where: { id: req.params.id, userId: req.userId },
     });
 
     if (!task) {
@@ -167,7 +168,7 @@ exports.criar = async (req, res) => {
     const task = await Task.create({
       titulo,
       descricao,
-      user_id: req.userId,
+      userId: req.userId,
     });
 
     res.status(201).json(task);
@@ -184,7 +185,7 @@ exports.atualizar = async (req, res) => {
     }
 
     const task = await Task.findOne({
-      where: { id: req.params.id, user_id: req.userId },
+      where: { id: req.params.id, userId: req.userId },
     });
 
     if (!task) {
@@ -203,7 +204,7 @@ exports.atualizar = async (req, res) => {
 exports.deletar = async (req, res) => {
   try {
     const task = await Task.findOne({
-      where: { id: req.params.id, user_id: req.userId },
+      where: { id: req.params.id, userId: req.userId },
     });
 
     if (!task) {

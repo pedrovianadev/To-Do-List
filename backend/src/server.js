@@ -17,14 +17,17 @@ app.use('/api/tasks', taskRoutes);
 
 const PORT = process.env.PORT || 3000;
 
-sequelize.authenticate()
-  .then(() => console.log('MySQL conectado!'))
-  .catch(err => console.error('Erro ao conectar:', err));
+if (require.main === module) {
+  sequelize.authenticate()
+    .then(() => console.log('MySQL conectado!'))
+    .catch(err => console.error('Erro ao conectar:', err));
 
-// Sincronizar models com o banco (cria as tabelas se não existirem)
-sequelize.sync()
-  .then(() => console.log('Tabelas sincronizadas!'));
+  sequelize.sync()
+    .then(() => console.log('Tabelas sincronizadas!'));
 
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
+  app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+  });
+}
+
+module.exports = app;

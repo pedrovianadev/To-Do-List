@@ -17,14 +17,14 @@ const User = sequelize.define('User', {
         allowNull: false,
         unique: true,
     },
-    senha: {
+    senha_hash: {
         type: DataTypes.STRING,
         allowNull: false,
     },
 });
 
 User.beforeCreate(async (user) => {
-    user.senha = await bcrypt.hash(user.senha, 10);
+    user.senha_hash = await bcrypt.hash(user.senha_hash, 10);
 });
 
 module.exports = User;

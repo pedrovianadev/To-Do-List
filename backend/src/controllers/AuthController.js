@@ -96,9 +96,15 @@
 const { User } = require('../models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { validationResult } = require('express-validator');
 
 exports.register = async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ erros: errors.array() });
+    }
+
     const { nome, email, senha } = req.body;
 
     const usuarioExistente = await User.findOne({ where: { email } });
@@ -129,6 +135,11 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ erros: errors.array() });
+    }
+
     const { email, senha } = req.body;
 
     const user = await User.findOne({ where: { email } });
