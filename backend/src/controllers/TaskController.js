@@ -1,3 +1,123 @@
+/**
+ * @swagger
+ * /api/tasks:
+ *   get:
+ *     tags: [Tarefas]
+ *     summary: Listar todas as tarefas do usuário
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [pendente, concluida]
+ *         description: Filtrar por status
+ *       - in: query
+ *         name: busca
+ *         schema:
+ *           type: string
+ *         description: Buscar por título
+ *     responses:
+ *       200:
+ *         description: Lista de tarefas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Task'
+ *
+ *   post:
+ *     tags: [Tarefas]
+ *     summary: Criar uma nova tarefa
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [titulo]
+ *             properties:
+ *               titulo:
+ *                 type: string
+ *               descricao:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Tarefa criada
+ *       400:
+ *         description: Dados inválidos
+ *
+ * /api/tasks/{id}:
+ *   get:
+ *     tags: [Tarefas]
+ *     summary: Buscar tarefa por ID
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Dados da tarefa
+ *       404:
+ *         description: Tarefa não encontrada
+ *
+ *   put:
+ *     tags: [Tarefas]
+ *     summary: Atualizar uma tarefa
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               titulo:
+ *                 type: string
+ *               descricao:
+ *                 type: string
+ *               status:
+ *                 type: string
+ *                 enum: [pendente, concluida]
+ *     responses:
+ *       200:
+ *         description: Tarefa atualizada
+ *       404:
+ *         description: Tarefa não encontrada
+ *
+ *   delete:
+ *     tags: [Tarefas]
+ *     summary: Deletar uma tarefa
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       204:
+ *         description: Tarefa deletada
+ *       404:
+ *         description: Tarefa não encontrada
+ */
+
 const { Task } = require('../models');
 const { validationResult } = require('express-validator');
 
